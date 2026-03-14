@@ -109,7 +109,6 @@ Nemu/
 |---|---|
 | `discord.js` | Discord API client (v14+) |
 | `dotenv` | Load environment variables from `.env` |
-| `node-fetch` | HTTP client for DeepSeek API calls |
 
 ### Dev dependencies
 
