@@ -1,0 +1,21 @@
+{
+  "name": "nemu",
+  "version": "1.0.0",
+  "description": "A Discord bot that fetches messages in a thread and summarizes them using Deepseek LLM via OpenRouter.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2"
+  },
+  "overrides": {
+    "undici": "6.24.1"
+  },
+  "license": "MIT"
+}
