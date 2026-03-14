@@ -4,7 +4,8 @@
   "description": "A Discord bot that fetches messages in a thread and summarizes them using Deepseek LLM via OpenRouter.",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "test": "jest"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -17,5 +18,8 @@
   "overrides": {
     "undici": "6.24.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
 }
