@@ -51,11 +51,30 @@ Open `.env` and fill in:
 
 ### 4. Invite the bot to your server
 
-Go to the Discord Developer Portal → OAuth2 → URL Generator.  
+#### 4a. Enable the Message Content Intent
+
+Before generating the invite URL, you must enable the **Message Content** privileged intent:
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) and open your application.
+2. Click **Bot** in the left sidebar.
+3. Under **Privileged Gateway Intents**, toggle **Message Content Intent** ON.
+4. Save your changes.
+
+> ⚠️ Without this intent, the bot cannot read message content and `/summarize` will not work.
+
+#### 4b. Generate the invite URL
+
+Go to the Discord Developer Portal → **OAuth2** → **URL Generator**.  
 Select the following scopes and permissions:
 
 - **Scopes:** `bot`, `applications.commands`
-- **Bot Permissions:** `Read Messages/View Channels`, `Send Messages`, `Read Message History`
+- **Bot Permissions:**
+  - `Read Messages / View Channels`
+  - `Send Messages`
+  - `Read Message History`
+  - `Use Application Commands`
+
+Copy the generated URL and open it in your browser to add the bot to your server.
 
 ### 5. Start the bot
 
