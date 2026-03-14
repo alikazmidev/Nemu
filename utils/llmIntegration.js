@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 const MODEL = 'deepseek-chat';
 
