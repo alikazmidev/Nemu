@@ -9,7 +9,7 @@
  * @throws {Error} If any required variable is missing.
  */
 function validateEnv() {
-  const required = ['DISCORD_TOKEN', 'CLIENT_ID', 'OPENROUTER_API_KEY'];
+  const required = ['DISCORD_TOKEN', 'CLIENT_ID', 'DEEPSEEK_API_KEY'];
   const missing = required.filter((key) => !process.env[key]);
 
   if (missing.length > 0) {

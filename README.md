@@ -2,7 +2,7 @@
 
 > *Named after the calm yet powerful character from the anime Bleach.*
 
-A Discord bot that fetches messages from a thread and generates a smart, engaging summary using the **Deepseek LLM** via the **OpenRouter API** — so you never have to scroll through hundreds of messages to catch up again.
+A Discord bot that fetches messages from a thread and generates a smart, engaging summary using the **DeepSeek LLM** via the **DeepSeek API** — so you never have to scroll through hundreds of messages to catch up again.
 
 ---
 
@@ -47,7 +47,7 @@ Open `.env` and fill in:
 |---|---|
 | `DISCORD_TOKEN` | Your bot token from the [Discord Developer Portal](https://discord.com/developers/applications) |
 | `CLIENT_ID` | Your Discord application's Client ID |
-| `OPENROUTER_API_KEY` | Your API key from [OpenRouter](https://openrouter.ai/) |
+| `DEEPSEEK_API_KEY` | Your API key from [DeepSeek](https://platform.deepseek.com/) |
 
 ### 4. Invite the bot to your server
 
@@ -90,7 +90,7 @@ Nemu/
 │   └── summarize.js         # /summarize command definition and handler
 ├── utils/
 │   ├── cooldown.js          # Per-user rate limiting (in-memory)
-│   ├── llmIntegration.js    # Deepseek LLM integration via OpenRouter API
+│   ├── llmIntegration.js    # DeepSeek LLM integration via DeepSeek API
 │   ├── messageHandler.js    # Message fetching, pagination, and filtering logic
 │   └── validateEnv.js       # Startup environment variable validation
 ├── tests/
@@ -109,7 +109,7 @@ Nemu/
 |---|---|
 | `discord.js` | Discord API client (v14+) |
 | `dotenv` | Load environment variables from `.env` |
-| `node-fetch` | HTTP client for OpenRouter API calls |
+| `node-fetch` | HTTP client for DeepSeek API calls |
 
 ### Dev dependencies
 

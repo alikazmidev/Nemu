@@ -25,7 +25,7 @@ describe('validateEnv', () => {
   it('does not throw when all required variables are set', () => {
     process.env.DISCORD_TOKEN = 'token';
     process.env.CLIENT_ID = 'client-id';
-    process.env.OPENROUTER_API_KEY = 'api-key';
+    process.env.DEEPSEEK_API_KEY = 'api-key';
 
     expect(() => validateEnv()).not.toThrow();
   });
@@ -33,7 +33,7 @@ describe('validateEnv', () => {
   it('throws when DISCORD_TOKEN is missing', () => {
     delete process.env.DISCORD_TOKEN;
     process.env.CLIENT_ID = 'client-id';
-    process.env.OPENROUTER_API_KEY = 'api-key';
+    process.env.DEEPSEEK_API_KEY = 'api-key';
 
     expect(() => validateEnv()).toThrow('DISCORD_TOKEN');
   });
@@ -41,26 +41,26 @@ describe('validateEnv', () => {
   it('throws when CLIENT_ID is missing', () => {
     process.env.DISCORD_TOKEN = 'token';
     delete process.env.CLIENT_ID;
-    process.env.OPENROUTER_API_KEY = 'api-key';
+    process.env.DEEPSEEK_API_KEY = 'api-key';
 
     expect(() => validateEnv()).toThrow('CLIENT_ID');
   });
 
-  it('throws when OPENROUTER_API_KEY is missing', () => {
+  it('throws when DEEPSEEK_API_KEY is missing', () => {
     process.env.DISCORD_TOKEN = 'token';
     process.env.CLIENT_ID = 'client-id';
-    delete process.env.OPENROUTER_API_KEY;
+    delete process.env.DEEPSEEK_API_KEY;
 
-    expect(() => validateEnv()).toThrow('OPENROUTER_API_KEY');
+    expect(() => validateEnv()).toThrow('DEEPSEEK_API_KEY');
   });
 
   it('lists all missing variables in the error message when multiple are absent', () => {
     delete process.env.DISCORD_TOKEN;
     delete process.env.CLIENT_ID;
-    delete process.env.OPENROUTER_API_KEY;
+    delete process.env.DEEPSEEK_API_KEY;
 
     expect(() => validateEnv()).toThrow('DISCORD_TOKEN');
     expect(() => validateEnv()).toThrow('CLIENT_ID');
-    expect(() => validateEnv()).toThrow('OPENROUTER_API_KEY');
+    expect(() => validateEnv()).toThrow('DEEPSEEK_API_KEY');
   });
 });
