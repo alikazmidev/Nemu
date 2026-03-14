@@ -12,8 +12,8 @@ module.exports = {
     .addIntegerOption((option) =>
       option
         .setName('limit')
-        .setDescription('Maximum number of messages to include')
-        .setRequired(true)
+        .setDescription('Maximum number of messages to include (optional if hours is set)')
+        .setRequired(false)
         .addChoices(
           { name: '50 messages', value: 50 },
           { name: '100 messages', value: 100 },
@@ -23,8 +23,8 @@ module.exports = {
     .addIntegerOption((option) =>
       option
         .setName('hours')
-        .setDescription('Only include messages from the last X hours')
-        .setRequired(true)
+        .setDescription('Only include messages from the last X hours (optional if limit is set)')
+        .setRequired(false)
         .addChoices(
           { name: '1 hour', value: 1 },
           { name: '2 hours', value: 2 },
@@ -34,6 +34,13 @@ module.exports = {
 
   async execute(interaction) {
     const channel = interaction.channel;
+
+    if (!channel) {
+      return interaction.reply({
+        content: '⚠️ This command can only be used inside a server channel.',
+        ephemeral: true,
+      });
+    }
 
     if (!channel.isThread()) {
       return interaction.reply({
@@ -54,6 +61,13 @@ module.exports = {
     const limit = interaction.options.getInteger('limit');
     const hours = interaction.options.getInteger('hours');
 
+    if (limit == null && hours == null) {
+      return interaction.reply({
+        content: '⚠️ Please provide at least one option: a message **limit**, a time window in **hours**, or both.',
+        ephemeral: true,
+      });
+    }
+
     await interaction.deferReply();
 
     // Record the cooldown now that we've committed to running the command
@@ -70,8 +84,11 @@ module.exports = {
     }
 
     if (messages.length === 0) {
+      const filters = [];
+      if (hours) filters.push(`the last ${hours} hour(s)`);
+      if (limit) filters.push(`the last ${limit} messages`);
       return interaction.editReply(
-        `📭 No messages found in the last ${hours} hour(s) or within the last ${limit} messages (excluding bot messages).`,
+        `📭 No messages found within ${filters.join(' and ')} (excluding bot messages).`,
       );
     }
 

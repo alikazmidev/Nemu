@@ -1,19 +1,20 @@
 /**
- * Fetches messages from a Discord thread, filtering out bot messages and
- * messages older than the specified number of hours. Stops once either
- * the message limit or the time limit is reached.
+ * Fetches messages from a Discord thread, filtering out bot messages and,
+ * optionally, messages older than the specified number of hours and/or
+ * beyond the specified message count.
  *
  * @param {import('discord.js').ThreadChannel} thread - The thread channel to fetch from.
- * @param {number} limit - Maximum number of non-bot messages to collect.
- * @param {number} hours - Only include messages from the last X hours.
+ * @param {number|null} limit - Maximum number of non-bot messages to collect, or null for no count limit (a safety ceiling of 500 is applied).
+ * @param {number|null} hours - Only include messages from the last X hours, or null for no time filter.
  * @returns {Promise<Array<{author: string, content: string, timestamp: Date}>>}
  */
 async function fetchThreadMessages(thread, limit, hours) {
-  const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+  const cutoff = hours != null ? new Date(Date.now() - hours * 60 * 60 * 1000) : null;
+  const effectiveLimit = limit != null ? limit : 500;
   const collected = [];
   let lastId = null;
 
-  while (collected.length < limit) {
+  while (collected.length < effectiveLimit) {
     const fetchOptions = { limit: 100 };
     if (lastId) fetchOptions.before = lastId;
 
@@ -25,7 +26,7 @@ async function fetchThreadMessages(thread, limit, hours) {
       // Use `continue` (not `break`) so the entire batch is examined — this
       // ensures we never skip a human message that comes after a bot message
       // which is older than the cutoff, regardless of iteration order.
-      if (message.createdAt < cutoff) {
+      if (cutoff && message.createdAt < cutoff) {
         reachedCutoff = true;
         continue;
       }
@@ -38,10 +39,10 @@ async function fetchThreadMessages(thread, limit, hours) {
         timestamp: message.createdAt,
       });
 
-      if (collected.length >= limit) break;
+      if (collected.length >= effectiveLimit) break;
     }
 
-    if (reachedCutoff || collected.length >= limit) break;
+    if (reachedCutoff || collected.length >= effectiveLimit) break;
 
     lastId = batch.last().id;
   }
