@@ -9,10 +9,13 @@ A Discord bot that fetches messages from a thread and generates a smart, engagin
 ## ✨ Features
 
 - **`/summarize` slash command** — works directly inside any Discord thread
+- **`/help` slash command** — lists all commands and their options in a clean embed
 - **Flexible fetch options** — choose between **50 / 100 / 250 messages** and **1 / 2 / 3 hours**
 - **Context-aware summaries** — explains what happened, key decisions, drama, lore — all in a friendly tone
 - **Ignores bot messages** — only real human conversations are summarized
 - **Attribution** — every summary includes *Requested by: @username*
+- **Per-user cooldown** — 30-second rate limit prevents API abuse
+- **Startup validation** — missing environment variables are caught immediately with a clear error
 - **Graceful error handling** — user-friendly messages for API errors and permission issues
 
 ---
@@ -71,6 +74,9 @@ The bot will register slash commands globally on startup (this can take up to 1 
    - **Limit** — how many messages to read (50 / 100 / 250)
    - **Hours** — how far back to look (1 / 2 / 3 hours)
 3. Nemu will fetch messages (whichever limit is hit first) and post a summary in the thread.
+4. Use `/help` to see all available commands and tips.
+
+> **Cooldown:** Each user must wait 30 seconds between `/summarize` calls.
 
 ---
 
@@ -80,10 +86,16 @@ The bot will register slash commands globally on startup (this can take up to 1 
 Nemu/
 ├── bot.js                   # Main entry point — Discord client & slash command dispatcher
 ├── commands/
+│   ├── help.js              # /help command — lists all commands in an embed
 │   └── summarize.js         # /summarize command definition and handler
 ├── utils/
+│   ├── cooldown.js          # Per-user rate limiting (in-memory)
+│   ├── llmIntegration.js    # Deepseek LLM integration via OpenRouter API
 │   ├── messageHandler.js    # Message fetching, pagination, and filtering logic
-│   └── llmIntegration.js    # Deepseek LLM integration via OpenRouter API
+│   └── validateEnv.js       # Startup environment variable validation
+├── tests/
+│   ├── cooldown.test.js     # Unit tests for the cooldown utility
+│   └── validateEnv.test.js  # Unit tests for env validation
 ├── .env.example             # Environment variables template
 ├── package.json             # Project metadata and dependencies
 └── README.md                # This file
@@ -99,9 +111,24 @@ Nemu/
 | `dotenv` | Load environment variables from `.env` |
 | `node-fetch` | HTTP client for OpenRouter API calls |
 
+### Dev dependencies
+
+| Package | Purpose |
+|---|---|
+| `jest` | Unit test runner |
+
 ---
 
 ## ⚙️ Requirements
 
 - **Node.js** v18 or higher
 - A Discord bot application with the **Message Content Intent** enabled in the Developer Portal
+
+## 🧪 Running tests
+
+```bash
+npm test
+```
+
+Unit tests cover the cooldown and environment validation utilities.  
+They run fully offline — no Discord token or API key needed.

@@ -1,6 +1,9 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { fetchThreadMessages } = require('../utils/messageHandler');
 const { summarizeMessages } = require('../utils/llmIntegration');
+const { checkCooldown, setCooldown } = require('../utils/cooldown');
+
+const COOLDOWN_SECONDS = 30;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,10 +42,22 @@ module.exports = {
       });
     }
 
+    // Cooldown check — done before deferring so the ephemeral reply is instant
+    const remaining = checkCooldown(interaction.user.id, COOLDOWN_SECONDS);
+    if (remaining > 0) {
+      return interaction.reply({
+        content: `⏳ Please wait **${remaining} second(s)** before using \`/summarize\` again.`,
+        ephemeral: true,
+      });
+    }
+
     const limit = interaction.options.getInteger('limit');
     const hours = interaction.options.getInteger('hours');
 
     await interaction.deferReply();
+
+    // Record the cooldown now that we've committed to running the command
+    setCooldown(interaction.user.id);
 
     let messages;
     try {

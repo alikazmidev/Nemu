@@ -1,6 +1,11 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { validateEnv } = require('./utils/validateEnv');
 const summarizeCommand = require('./commands/summarize');
+const helpCommand = require('./commands/help');
+
+// Fail fast if any required environment variable is missing
+validateEnv();
 
 const client = new Client({
   intents: [
@@ -10,8 +15,10 @@ const client = new Client({
   ],
 });
 
+const commands = [summarizeCommand, helpCommand];
+
 client.commands = new Collection();
-client.commands.set(summarizeCommand.data.name, summarizeCommand);
+commands.forEach((cmd) => client.commands.set(cmd.data.name, cmd));
 
 client.once('ready', async () => {
   console.log(`✅ Nemu is online as ${client.user.tag}`);
@@ -20,7 +27,7 @@ client.once('ready', async () => {
   try {
     console.log('🔄 Registering slash commands...');
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
-      body: [summarizeCommand.data.toJSON()],
+      body: commands.map((cmd) => cmd.data.toJSON()),
     });
     console.log('✅ Slash commands registered globally.');
   } catch (error) {
