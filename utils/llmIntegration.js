@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
 
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'deepseek/deepseek-chat';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+const MODEL = 'deepseek-chat';
 
 /**
- * Sends the collected thread messages to Deepseek via OpenRouter and returns
+ * Sends the collected thread messages to the DeepSeek API and returns
  * a human-readable summary of the conversation.
  *
  * @param {Array<{author: string, content: string, timestamp: Date}>} messages
@@ -24,13 +24,11 @@ Be concise but thorough. Use bullet points where appropriate.`;
 
   const userPrompt = `Please summarize the following Discord thread conversation for ${requestedByUsername}, who wants to catch up on what they missed:\n\n${transcript}`;
 
-  const response = await fetch(OPENROUTER_API_URL, {
+  const response = await fetch(DEEPSEEK_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      'HTTP-Referer': 'https://github.com/alikazmidev/Nemu',
-      'X-Title': 'Nemu Discord Bot',
+      Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
     },
     body: JSON.stringify({
       model: MODEL,
@@ -45,14 +43,14 @@ Be concise but thorough. Use bullet points where appropriate.`;
 
   if (!response.ok) {
     const errorBody = await response.text();
-    throw new Error(`OpenRouter API error ${response.status}: ${errorBody}`);
+    throw new Error(`DeepSeek API error ${response.status}: ${errorBody}`);
   }
 
   const data = await response.json();
 
   const content = data?.choices?.[0]?.message?.content;
   if (!content) {
-    throw new Error('Unexpected response structure from OpenRouter API.');
+    throw new Error('Unexpected response structure from DeepSeek API.');
   }
 
   return content.trim();
