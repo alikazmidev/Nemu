@@ -35,6 +35,13 @@ module.exports = {
   async execute(interaction) {
     const channel = interaction.channel;
 
+    if (!channel) {
+      return interaction.reply({
+        content: '⚠️ This command can only be used inside a server channel.',
+        ephemeral: true,
+      });
+    }
+
     if (!channel.isThread()) {
       return interaction.reply({
         content: '⚠️ This command can only be used inside a thread.',
