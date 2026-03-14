@@ -10,14 +10,14 @@ module.exports = {
       .setColor(0x5865f2) // Discord blurple
       .setTitle('🤖 Nemu — Help')
       .setDescription(
-        'Nemu is a Discord bot that summarizes thread conversations using AI.\n' +
-          'Run the commands below **inside a thread** to get started.',
+        'Nemu is a Discord bot that summarizes channel conversations using AI.\n' +
+          'Run the commands below in any text channel or thread to get started.',
       )
       .addFields(
         {
           name: '`/summarize`',
           value:
-            'Summarize the recent messages in this thread.\n' +
+            'Summarize the recent messages in this channel or thread.\n' +
             '• **limit** — how many messages to read (50 / 100 / 250)\n' +
             '• **hours** — how far back to look (1 / 2 / 3 hours)\n' +
             '_Whichever limit is reached first wins._',
