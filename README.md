@@ -2,13 +2,13 @@
 
 > *Named after the calm yet powerful character from the anime Bleach.*
 
-A Discord bot that fetches messages from a thread and generates a smart, engaging summary using the **DeepSeek LLM** via the **DeepSeek API** — so you never have to scroll through hundreds of messages to catch up again.
+A Discord bot that fetches messages from a channel or thread and generates a smart, engaging summary using the **DeepSeek LLM** via the **DeepSeek API** — so you never have to scroll through hundreds of messages to catch up again.
 
 ---
 
 ## ✨ Features
 
-- **`/summarize` slash command** — works directly inside any Discord thread
+- **`/summarize` slash command** — works in any text channel or thread
 - **`/help` slash command** — lists all commands and their options in a clean embed
 - **Flexible fetch options** — choose between **50 / 100 / 250 messages** and **1 / 2 / 3 hours**
 - **Context-aware summaries** — explains what happened, key decisions, drama, lore — all in a friendly tone
@@ -69,11 +69,11 @@ The bot will register slash commands globally on startup (this can take up to 1 
 
 ## 🎮 Usage
 
-1. Open any thread in your Discord server.
+1. Open any text channel or thread in your Discord server.
 2. Type `/summarize` and choose:
    - **Limit** — how many messages to read (50 / 100 / 250)
    - **Hours** — how far back to look (1 / 2 / 3 hours)
-3. Nemu will fetch messages (whichever limit is hit first) and post a summary in the thread.
+3. Nemu will fetch messages (whichever limit is hit first) and post a summary.
 4. Use `/help` to see all available commands and tips.
 
 > **Cooldown:** Each user must wait 30 seconds between `/summarize` calls.

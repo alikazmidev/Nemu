@@ -8,7 +8,7 @@ const COOLDOWN_SECONDS = 30;
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('summarize')
-    .setDescription('Summarize the recent messages in this thread')
+    .setDescription('Summarize the recent messages in this channel or thread')
     .addIntegerOption((option) =>
       option
         .setName('limit')
@@ -38,13 +38,6 @@ module.exports = {
     if (!channel) {
       return interaction.reply({
         content: '⚠️ This command can only be used inside a server channel.',
-        ephemeral: true,
-      });
-    }
-
-    if (!channel.isThread()) {
-      return interaction.reply({
-        content: '⚠️ This command can only be used inside a thread.',
         ephemeral: true,
       });
     }
@@ -79,7 +72,7 @@ module.exports = {
     } catch (error) {
       console.error('❌ Failed to fetch messages:', error);
       return interaction.editReply(
-        '⚠️ Failed to fetch messages from this thread. Please check my permissions and try again.',
+        '⚠️ Failed to fetch messages from this channel. Please check my permissions and try again.',
       );
     }
 
