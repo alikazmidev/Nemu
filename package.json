@@ -1,16 +1,18 @@
 {
   "name": "nemu",
   "version": "1.0.0",
-  "description": "A Discord bot that fetches messages in a thread and summarizes them using Deepseek LLM via OpenRouter.",
-  "main": "bot.js",
+  "description": "A multi-tenant Discord TLDR bot using per-server LLM provider keys.",
+  "main": "index.js",
   "scripts": {
-    "start": "node bot.js",
+    "start": "node index.js",
+    "deploy-commands": "node deploy-commands.js",
     "test": "jest"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "better-sqlite3": "^11.8.1",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7"
   },
