@@ -1,133 +1,66 @@
-# Nemu 🤖
+# Nemu TLDR Bot
 
-> *Named after the calm yet powerful character from the anime Bleach.*
+A multi-tenant Discord TLDR bot built with `discord.js` v14.
 
-A Discord bot that fetches messages from a channel or thread and generates a smart, engaging summary using the **DeepSeek LLM** via the **DeepSeek API** — so you never have to scroll through hundreds of messages to catch up again.
+Each Discord server stores its own LLM provider and API key in SQLite.
 
----
+## Features
 
-## ✨ Features
+- `/tldr [count]` (default 50, max 100)
+- `/setup api_key:[key] provider:[name]` (admin only)
+- `/config` (admin only)
+- `/remove` (admin only)
+- Channel-wide 10-minute cooldown for `/tldr`
+- Per-server provider/API key storage
+- Provider router with DeepSeek adapter and Phase 2 stubs for OpenAI/Anthropic
 
-- **`/summarize` slash command** — works in any text channel or thread
-- **`/help` slash command** — lists all commands and their options in a clean embed
-- **Flexible fetch options** — choose between **50 / 100 / 250 messages** and **1 / 2 / 3 hours**
-- **Context-aware summaries** — explains what happened, key decisions, drama, lore — all in a friendly tone
-- **Ignores bot messages** — only real human conversations are summarized
-- **Attribution** — every summary includes *Requested by: @username*
-- **Per-user cooldown** — 30-second rate limit prevents API abuse
-- **Startup validation** — missing environment variables are caught immediately with a clear error
-- **Graceful error handling** — user-friendly messages for API errors and permission issues
+## Setup
 
----
-
-## 🚀 Setup
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/alikazmidev/Nemu.git
-cd Nemu
-```
-
-### 2. Install dependencies
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 3. Configure environment variables
+2. Create `.env` with:
+
+```env
+DISCORD_TOKEN=
+CLIENT_ID=
+```
+
+3. Register slash commands once:
 
 ```bash
-cp .env.example .env
+node deploy-commands.js
 ```
 
-Open `.env` and fill in:
-
-| Variable | Description |
-|---|---|
-| `DISCORD_TOKEN` | Your bot token from the [Discord Developer Portal](https://discord.com/developers/applications) |
-| `CLIENT_ID` | Your Discord application's Client ID |
-| `DEEPSEEK_API_KEY` | Your API key from [DeepSeek](https://platform.deepseek.com/) |
-
-### 4. Invite the bot to your server
-
-Go to the Discord Developer Portal → OAuth2 → URL Generator.  
-Select the following scopes and permissions:
-
-- **Scopes:** `bot`, `applications.commands`
-- **Bot Permissions:** `Read Messages/View Channels`, `Send Messages`, `Read Message History`
-
-### 5. Start the bot
+4. Start the bot:
 
 ```bash
-npm start
+node index.js
 ```
 
-The bot will register slash commands globally on startup (this can take up to 1 hour to propagate on Discord).
-
----
-
-## 🎮 Usage
-
-1. Open any text channel or thread in your Discord server.
-2. Type `/summarize` and choose:
-   - **Limit** — how many messages to read (50 / 100 / 250)
-   - **Hours** — how far back to look (1 / 2 / 3 hours)
-3. Nemu will fetch messages (whichever limit is hit first) and post a summary.
-4. Use `/help` to see all available commands and tips.
-
-> **Cooldown:** Each user must wait 30 seconds between `/summarize` calls.
-
----
-
-## 🛠️ Project Structure
+## Project Structure
 
 ```
-Nemu/
-├── bot.js                   # Main entry point — Discord client & slash command dispatcher
+tldr-bot/
+├── .env
+├── index.js
+├── deploy-commands.js
+├── db/
+│   └── database.js
 ├── commands/
-│   ├── help.js              # /help command — lists all commands in an embed
-│   └── summarize.js         # /summarize command definition and handler
-├── utils/
-│   ├── cooldown.js          # Per-user rate limiting (in-memory)
-│   ├── llmIntegration.js    # DeepSeek LLM integration via DeepSeek API
-│   ├── messageHandler.js    # Message fetching, pagination, and filtering logic
-│   └── validateEnv.js       # Startup environment variable validation
-├── tests/
-│   ├── cooldown.test.js     # Unit tests for the cooldown utility
-│   └── validateEnv.test.js  # Unit tests for env validation
-├── .env.example             # Environment variables template
-├── package.json             # Project metadata and dependencies
-└── README.md                # This file
+│   ├── tldr.js
+│   ├── setup.js
+│   ├── config.js
+│   └── remove.js
+└── utils/
+    ├── cooldown.js
+    ├── messageParser.js
+    └── providers/
+        ├── index.js
+        ├── deepseek.js
+        ├── openai.js
+        └── anthropic.js
 ```
-
----
-
-## 📦 Dependencies
-
-| Package | Purpose |
-|---|---|
-| `discord.js` | Discord API client (v14+) |
-| `dotenv` | Load environment variables from `.env` |
-
-### Dev dependencies
-
-| Package | Purpose |
-|---|---|
-| `jest` | Unit test runner |
-
----
-
-## ⚙️ Requirements
-
-- **Node.js** v18 or higher
-- A Discord bot application with the **Message Content Intent** enabled in the Developer Portal
-
-## 🧪 Running tests
-
-```bash
-npm test
-```
-
-Unit tests cover the cooldown and environment validation utilities.  
-They run fully offline — no Discord token or API key needed.
