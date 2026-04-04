@@ -1,4 +1,5 @@
 const COOLDOWN_MS = 10 * 60 * 1000;
+const MS_PER_MINUTE = 60_000;
 const channelCooldowns = new Map();
 
 function getCooldownRemainingMinutes(channelId) {
@@ -11,7 +12,7 @@ function getCooldownRemainingMinutes(channelId) {
     return 0;
   }
 
-  return Math.ceil(remainingMs / 60000);
+  return Math.ceil(remainingMs / MS_PER_MINUTE);
 }
 
 function setChannelCooldown(channelId) {

@@ -1,3 +1,5 @@
+const { isVisionSupported } = require('./providers');
+
 function isGifAttachment(attachment) {
   const name = String(attachment?.name || '').toLowerCase();
   const url = String(attachment?.url || '').toLowerCase();
@@ -50,9 +52,7 @@ function parseSingleMessage(message, visionSupported) {
 }
 
 function formatMessagesForLLM(messages, provider) {
-  const normalizedProvider = String(provider || '').toLowerCase();
-  const visionSupportedProviders = new Set(['openai', 'anthropic']);
-  const visionSupported = visionSupportedProviders.has(normalizedProvider);
+  const visionSupported = isVisionSupported(provider);
 
   return messages
     .filter((m) => !m.author?.bot)

@@ -1,8 +1,11 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { upsertServerConfig } = require('../db/database');
+const { SUPPORTED_PROVIDER_NAMES } = require('../utils/providers');
+
+const MIN_MASKABLE_KEY_LENGTH = 7;
 
 function maskKey(key) {
-  if (!key || key.length <= 7) return '***';
+  if (!key || key.length <= MIN_MASKABLE_KEY_LENGTH) return '***';
   return `${key.slice(0, 6)}...${key.slice(-4)}`;
 }
 
@@ -30,6 +33,12 @@ module.exports = {
 
     const apiKey = interaction.options.getString('api_key', true).trim();
     const provider = interaction.options.getString('provider', true).trim().toLowerCase();
+    if (!SUPPORTED_PROVIDER_NAMES.includes(provider)) {
+      return interaction.reply({
+        content: '❌ Provider not supported right now. Supported provider: deepseek.',
+        ephemeral: true,
+      });
+    }
 
     upsertServerConfig(interaction.guildId, provider, apiKey);
 

@@ -6,6 +6,7 @@ const { getCooldownRemainingMinutes, setChannelCooldown } = require('../utils/co
 
 const MAX_COUNT = 100;
 const DEFAULT_COUNT = 50;
+const DISCORD_MESSAGE_LIMIT = 2000;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -31,7 +32,8 @@ module.exports = {
     const remainingMinutes = getCooldownRemainingMinutes(interaction.channelId);
     if (remainingMinutes > 0) {
       return interaction.reply({
-        content: `⏳ TLDR is on cooldown. Try again in ${remainingMinutes} minute${remainingMinutes === 1 ? '' : 's'}.`,
+        content: `⏳ TLDR is on cooldown. Try again in ${remainingMinutes} minutes.`,
+        ephemeral: true,
       });
     }
 
@@ -66,7 +68,7 @@ module.exports = {
       });
 
       setChannelCooldown(interaction.channelId);
-      return interaction.editReply(summary.slice(0, 2000));
+      return interaction.editReply(summary.slice(0, DISCORD_MESSAGE_LIMIT));
     } catch (error) {
       const message = String(error?.message || '');
 

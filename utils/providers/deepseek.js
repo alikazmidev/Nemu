@@ -1,5 +1,7 @@
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const MODEL = 'deepseek-chat';
+const TEMPERATURE = 0.3;
+const MAX_TOKENS = 900;
 
 async function summarize(apiKey, formattedMessages) {
   const response = await fetch(DEEPSEEK_API_URL, {
@@ -21,8 +23,8 @@ async function summarize(apiKey, formattedMessages) {
           content: `Conversation to summarize:\n\n${formattedMessages}`,
         },
       ],
-      temperature: 0.3,
-      max_tokens: 900,
+      temperature: TEMPERATURE,
+      max_tokens: MAX_TOKENS,
     }),
   });
 
